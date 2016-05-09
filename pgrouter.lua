@@ -7,20 +7,20 @@
 local cjson = require "cjson"
 
 -- Load our API commands
-local api = require "api"
+local api = require "myapi"
 
 -- mapping patterns to query views
 local routes = {
-    ['max']               = api.max,
-    ['record/([a-z_]+)/([a-z]+)']= api.record,
-    ['year/([0-9]{4})']   = api.year,
+    ['max']               = api.bla, --api.max,
+    ['record/([a-z_]+)/([a-z]+)']= api.bla, --api.record,
+    ['year/([0-9]{4})']   = api.bla, --api.year,
     ['now']               = api.now,
-    ['day']               = api.day,
-    ['recent']            = api.recent,
-    ['station']           = api.meta,
-    ['windhist']          = api.windhist,
-    ['hour']              = api.by_dateunit,
-    ['(month)']           = api.by_dateunit,
+    ['day']               = api.bla, --api.day,
+    ['recent']            = api.bla, --api.recent,
+    ['station']           = api.bla, --api.meta,
+    ['windhist']          = api.bla, --api.windhist,
+    ['hour']              = api.hour, --api.by_dateunit,
+    ['(month)']           = api.bla, --api.by_dateunit,
 }
 -- Set the content type
 ngx.header.content_type = 'application/json';
