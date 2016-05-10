@@ -12,11 +12,11 @@ local api = require "myapi"
 -- mapping patterns to query views
 local routes = {
     ['max']               = api.bla, --api.max,
-    ['record/([a-z_]+)/([a-z]+)']= api.bla, --api.record,
+    ['record/([a-z_]+)/([a-z]+)']= api.record, --api.record,
     ['year/([0-9]{4})']   = api.bla, --api.year,
     ['now']               = api.now,
     ['day']               = api.bla, --api.day,
-    ['recent']            = api.bla, --api.recent,
+    ['recent']            = api.recent, --api.recent,
     ['station']           = api.bla, --api.meta,
     ['windhist']          = api.bla, --api.windhist,
     ['hour']              = api.hour, --api.by_dateunit,
