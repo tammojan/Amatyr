@@ -98,7 +98,7 @@ var draw = function(source) {
     //drawlines('#humidity', source, 'outhumidity','Humidity (%)', width, height);
 
     */
-    var vals = ['windspeed', 'windgust', 'outhumidity', 'winddir', 'rain', 'barometer', 'inhumidity', 'intemp', 'outtemp', 'dewpoint', 'heatindex', 'windchill'];
+    var vals = ['windspeed', 'outhumidity', 'winddir', 'outtemp', 'dewpoint'];
     d3.select('#graphtabs ul.nav-tabs').selectAll('li')
         .data(vals)
       .enter().append('li')
@@ -201,10 +201,10 @@ var amatyrlib = function() {
         if (value != undefined) 
             return Number((value).toFixed(1))+ ' °C';
     }
-    rivets.formatters.pressure = function(value) {
-        if (value)
-            return Number((value).toFixed(1)) + ' hPa';
-    }
+    //rivets.formatters.pressure = function(value) {
+    //    if (value)
+    //        return Number((value).toFixed(1)) + ' hPa';
+    //}
     rivets.formatters.rain = function(value) {
         if(value)
             return Number((value).toFixed(1)) + ' mm';
@@ -279,8 +279,8 @@ var amatyrlib = function() {
         }
         if (name == 'windspeed')
             return rivets.formatters.wind(value);
-        if (name == 'barometer')
-            return rivets.formatters.pressure(value);
+        //if (name == 'barometer')
+        //    return rivets.formatters.pressure(value);
         if (name == 'winddir') {
             var degree = Number((value).toFixed(0))
             return '<i title="'+degree+' °" class="fa fa-arrow-up" style="'+rivets.formatters.rotate(degree)+'"></i>';

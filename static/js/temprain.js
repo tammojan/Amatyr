@@ -140,6 +140,7 @@ var temprain = function(el, data, width, height) {
       .style("text-anchor", "end")
       .text('asdf');
       */
+    // Yuk, this should be computed somewhere, see https://github.com/mourner/suncalc
     var hours = svg.selectAll("text.x")
         .data(x.ticks(10))
         .enter().append("g")
@@ -150,7 +151,7 @@ var temprain = function(el, data, width, height) {
         .attr("y", 10)
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'central')
-        .text(function(d) {
+        .text(function(d) { 
             var hours = d.getHours();
             if (hours === 6) {
                 return '☀';
@@ -209,7 +210,7 @@ var temprain = function(el, data, width, height) {
     }
 
     /* Pressure section */
-
+/*
     x.domain(d3.extent(data, function(d) { return d.date; }));
     var y = d3.scale.linear()
         .range([height, 0]);
@@ -229,7 +230,7 @@ var temprain = function(el, data, width, height) {
       .attr("stroke-opacity", "0.5")
       .attr("d", line)
     amatyrlib.addLineAnimation(pathospressure);
-
+*/
 
     /* Rain bar section */
 
@@ -240,7 +241,7 @@ var temprain = function(el, data, width, height) {
         .range([height, height/2]);
 
     timex.domain(data.map(function(d) { return d.date; }));
-    timey.domain([0, d3.max(data, function(d) { return d.dayrain; })]);
+//    timey.domain([0, d3.max(data, function(d) { return d.dayrain; })]);
 
     var barxpos = function(d) { 
       var nr = timex(d.date);
@@ -286,6 +287,7 @@ var temprain = function(el, data, width, height) {
             .attr("stroke-width", "1px");
           $("#tt").remove();
       })
+
       .transition().delay(function (d,i){ return 300;})
       .duration(2000)
       .attr("y", function(d) { return timey(d.dayrain); })

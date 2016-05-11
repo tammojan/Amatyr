@@ -12,7 +12,7 @@
     <link href="/static/fa/css/font-awesome.min.css" rel="stylesheet">
     <link href="/static/meteocons-font/FONT/Font-face/stylesheet.css" rel="stylesheet">
 
-    <link href="/static/cal-heatmap/cal-heatmap.css" rel="stylesheet">
+    <!--<link href="/static/cal-heatmap/cal-heatmap.css" rel="stylesheet">-->
     <link href="/static/screen.css" rel="stylesheet">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -43,12 +43,14 @@
                 <li class=""><a href="/day/yesterday">Yesterday</a></li>
                 <li class=""><a href="/hour/week">Week</a></li>
                 <li class=""><a href="/hour/month">Month</a></li>
+<!--
                 {% 
                   local currentyear = tonumber(string.sub(ngx.today(),1,4))
                   for i=currentyear,conf.firstyear,-1 do
                   %}
                   <li class=""><a href="/year/{{i}}">{{i}}</a></li>
                 {% end %}
+-->
             </ul>
             <ul class="nav pull-right">
                 <li>
@@ -71,7 +73,7 @@
                 <div class="svgholder" id="temp"><i class="fa fa-spin fa fa-spinner"></i>Loading data...</div>
                 <h5>
                     Legend:
-                    <span class="high">High</span>, <span class="avg">avg</span>, <span class="min">min</span> temperature. <span class="rain">Rain</span> in mm. <span class="pressure">Pressure</span>
+                    <span class="high">High</span>, <span class="avg">avg</span>, <span class="min">min</span> temperature. 
                 </h5>
             </div>
             <div class="row-fluid windroserow">
@@ -80,12 +82,8 @@
             </div>
             <div class="row-fluid">
                 <!--
-                <h5>Pressure </h5>
-                <div class="svgholder" id="pressure"><i class="icon-spin icon-spinner"></i>Loading data...</div>
                 <h5>Wind speed by time<span class="pull-right" data-text='current.windspeed | wind'></span></h5>
                 <div class="svgholder wind" id="wind"><i class="icon-spin icon-spinner"></i>Loading data...</div>
-                <h5>Rain <span class="pull-right" data-text='current.rain | rain'></span></h5>
-                <div class="svgholder" id="rain"><i class="icon-spin icon-spinner"></i>Loading data...</div>
                 <h5>Wind direction by time<span class="pull-right" data-text='current.winddir | degree '></span></h5>
                 <div class="svgholder winddir" id="winddir"><i class="icon-spin icon-spinner"></i>Loading data...</div>
                 <h5>Humidity by time<span class="pull-right" data-text='current.outhumidity | percent '></span></h5>
@@ -127,16 +125,6 @@
     </div>
 
     <br>
-    <div class="container-fluid">
-        <div class="row-fluid">
-            <div class="span12" id="cal-heatmap">
-                <h3>Rain calendar <small>Intensity by rain amount</small></h3>
-                <div class="spinner"><i class="fa fa-spinner fa fa-spin"></i> Loading calendar data... </div>
-            </div>
-        </div>
-    </div>
-
-    <br>
     {% if conf.webcam then %}
     <div class="container-fluid">
         <div class="row-fluid">
@@ -153,6 +141,7 @@
     <br>
     {% end %}
 
+<!--
     <div class="container-fluid">
         <div class="row-fluid">
             <div class="span12" id="tabular"> 
@@ -163,7 +152,7 @@
         </div>
     </div>
     <br>
-
+-->
     <hr>
     <div class="container-fluid">
         <div class="row-fluid">
@@ -185,10 +174,8 @@
                 <th data-text="d.datetime | date"></th>
             </tr>
             <tr class="avg"><td>Temperature </td><td><i class="icon-met icon-temp"></i></td><td data-text="d.outtemp | temp"></td></tr>
-                <tr class="rain"><td>Daily rain </td><td><i class="fa fa-tint"></i></td><td data-text="d.dayrain | rain"></td></tr>
                 <tr class="wind"><td>Wind speed </td><td><i class="icon-met icon-wind"></i></td><td data-text="d.windspeed | wind"></td></tr>
                 <tr class="wind"><td>Wind direction </td><td><i class="icon-met icon-compass"></i></td><td data-text="d.winddir | degree"></td></tr>
-            <tr class="pressure"><td>Pressure</td><td><i class="fa fa-signal"></i></td><td data-text="d.barometer | pressure"></td></tr>
                 <tr class="hum"><td>Humidity</td><td><i class="fa fa-dashboard"></i></td><td data-text="d.outhumidity | percent"></td></tr>
         </table>
     </div>
@@ -215,52 +202,10 @@
                 <td data-text='current.minouttempage'><i class="fa fa-spinner fa fa-spin"></i></td>
             </tr>
             <tr>
-                <td>Lowest wind chill</td>
-                <td data-text='current.minwindchillvalue | temp'><i class="fa fa-spinner fa fa-spin"></i></td>
-                <td data-text='current.minwindchilldate'><i class="fa fa-spinner fa fa-spin"></i></td>
-                <td data-text='current.minwindchillage'><i class="fa fa-spinner fa fa-spin"></i></td>
-            </tr>
-            <tr>
-                <td>Highest heat index</td>
-                <td data-text='current.maxheatindexvalue | temp'><i class="fa fa-spinner fa fa-spin"></i></td>
-                <td data-text='current.maxheatindexdate'><i class="fa fa-spinner fa fa-spin"></i></td>
-                <td data-text='current.maxheatindexage'><i class="fa fa-spinner fa fa-spin"></i></td>
-            </tr>
-            <tr>
                 <td>Highest avg wind speed</td>
                 <td data-text='current.maxwindspeedvalue | wind'><i class="fa fa-spinner fa fa-spin"></i></td>
                 <td data-text='current.maxwindspeeddate'><i class="fa fa-spinner fa fa-spin"></i></td>
                 <td data-text='current.maxwindspeedage'><i class="fa fa-spinner fa fa-spin"></i></td>
-            </tr>
-            <tr>
-                <td>Highest wind gust speed</td>
-                <td data-text='current.maxwindgustvalue | wind'><i class="fa fa-spinner fa fa-spin"></i></td>
-                <td data-text='current.maxwindgustdate'><i class="fa fa-spinner fa fa-spin"></i></td>
-                <td data-text='current.maxwindgustage'><i class="fa fa-spinner fa fa-spin"></i></td>
-            </tr>
-            <tr>
-                <td>Amount of rain in period</td>
-                <td data-text='current.sumrainvalue | rain'><i class="fa fa-spinner fa fa-spin"></i></td>
-                <td data-text='current.sumraindate'><i class="fa fa-spinner fa-spin"></i></td>
-                <td data-text='current.sumrainage'><i class="fa fa-spinner fa-spin"></i></td>
-            </tr>
-            <tr>
-                <td>Highest daily rain</td>
-                <td data-text='current.maxdayrainvalue | rain'><i class="fa fa-spinner fa-spin"></i></td>
-                <td data-text='current.maxdayraindate'><i class="fa fa-spinner fa-spin"></i></td>
-                <td data-text='current.maxdayrainage'><i class="fa fa-spinner fa-spin"></i></td>
-            </tr>
-            <tr>
-                <td>Highest pressure</td>
-                <td data-text='current.maxbarometervalue | pressure'><i class="fa fa-spinner fa-spin"></i></td>
-                <td data-text='current.maxbarometerdate'><i class="fa fa-spinner fa-spin"></i></td>
-                <td data-text='current.maxbarometerage'><i class="fa fa-spinner fa-spin"></i></td>
-            </tr>
-            <tr>
-                <td>Lowest pressure</td>
-                <td data-text='current.minbarometervalue | pressure'><i class="fa fa-spinner fa-spin"></i></td>
-                <td data-text='current.minbarometerdate'><i class="fa fa-spinner fa-spin"></i></td>
-                <td data-text='current.minbarometerage'><i class="fa fa-spinner fa-spin"></i></td>
             </tr>
         </table>
     </script>
@@ -295,7 +240,7 @@
     <script src="/static/js/temprain.js"></script>
     <script src="/static/js/sparkline.js"></script>
     <script src="/static/js/windrose.js"></script>
-    <script src="/static/cal-heatmap/cal-heatmap.js"></script>
+    <!--<script src="/static/cal-heatmap/cal-heatmap.js"></script>-->
     <script src="/static/js/amatyrlib.js"></script>
     <script src="/static/js/amatyr.js"></script>
   </body>

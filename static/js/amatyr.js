@@ -139,11 +139,11 @@ var AmatYr = function(apiurl) {
             // Ordered wrong way, so unshift
             tdata.unshift(k.outtemp);
             wdata.unshift(k.windspeed);
-            pdata.unshift(k.barometer);
+            //pdata.unshift(k.barometer);
         });
         sparklines.push(new sparkline('#sparkline', tdata, 'outtemp', tdata.length, 38, 'basis', true, 1000));
         sparklines.push(new sparkline('#windsparkline', wdata, 'windspeed', wdata.length, 38, 'basis', true, 1000));
-        sparklines.push(new sparkline('#pressuresparkline', pdata, 'barometer', pdata.length, 38, 'basis', true, 1000));
+        //sparklines.push(new sparkline('#pressuresparkline', pdata, 'barometer', pdata.length, 38, 'basis', true, 1000));
         for(key in sparklines) {
             // Update each minute
             setInterval(sparklines[key].update, 60*1000);
@@ -164,7 +164,7 @@ var AmatYr = function(apiurl) {
     // Fetch record weather
     var updateRecordsYear = function(year) {
         var keys = ['max', 'min'];
-        var vals = ['outtemp', 'windspeed', 'dayrain', 'barometer', 'windgust', 'heatindex', 'windchill'];
+        var vals = ['outtemp', 'windspeed'/*, 'dayrain', 'barometer', 'windgust', 'heatindex', 'windchill'*/];
         vals.forEach(function(k, v) {
             keys.forEach(function(func, idx) {
                 // set key for rivets to set up proper setters and getters
@@ -177,17 +177,19 @@ var AmatYr = function(apiurl) {
                     if (json) {
                         record_weather.current[func+k+'date'] = json[0].datetime;
                         record_weather.current[func+k+'value'] = json[0][k];
-                        record_weather.current[func+k+'age'] = json[0].age;
+                        record_weather.current[func+k+'age'] = json[0].age + ((json[0].age==1)?" day":" days");
                     }
                 });
             })
         });
         // Additional entries
+/*
         var k = 'rain',
             func = 'sum';
         d3.json(apiurl + 'record/'+k+'/'+func+'?start='+year, function(json) { 
             record_weather.current[func+k+'value'] = json[0][k];
         });
+*/
     }
     // initial structure for rivets to work
     updateRecordsYear('today');
@@ -218,6 +220,7 @@ var AmatYr = function(apiurl) {
     });
 
     /* Calendar generation */
+/*
     var updateCalender = function(json, year) {
         // TODO dynamic
         var width = $('#main').css('width').split('px')[0];
@@ -253,6 +256,7 @@ var AmatYr = function(apiurl) {
             legend: [1, 4, 6, 8]    // Custom threshold for the scale
         });
     }
+*/
 
     var updateTabularData = function(data) {
         // Remove spinner
@@ -274,7 +278,7 @@ var AmatYr = function(apiurl) {
           .key(function(d) { return d.jsdate.getMonth(); })
           .rollup(function(d) { 
             return {
-                barometer: d3.mean(d, function(g) { return +g.barometer }),
+                //barometer: d3.mean(d, function(g) { return +g.barometer }),
                 windspeed: d3.mean(d, function(g) { return +g.windspeed }),
                 windgustmax: d3.max(d, function(g) { return +g.windgust}),
                 outtemp: d3.mean(d, function(g) { return +g.outtemp }),
@@ -359,7 +363,7 @@ var AmatYr = function(apiurl) {
             updateTabularData(json);
             // The tabular data uses the same data source as calendar, so it is
             // reused in that function
-            updateCalender(json, year);
+            //updateCalender(json, year);
         });
     }
     // Draw current year
@@ -367,14 +371,16 @@ var AmatYr = function(apiurl) {
         
 
     // Auto update webcam
-    setInterval(function () {
-      var imgElem = document.getElementById("webcam");
-      var newImg = new Image();
-      newImg.src = imgElem.src.split("?")[0] + "?" + new Date().getTime();
-      newImg.addEventListener("load", function (evt) {
-        imgElem.src = newImg.src;
-      });
-    }, 30000);
+    var imgElem = document.getElementById("webcam");
+    if (imgElem) {
+      setInterval(function () {
+        var newImg = new Image();
+        newImg.src = imgElem.src.split("?")[0] + "?" + new Date().getTime();
+        newImg.addEventListener("load", function (evt) {
+          imgElem.src = newImg.src;
+        });
+      }, 30000);
+    }
 
     return this;
 }
