@@ -11,16 +11,13 @@ local api = require "myapi"
 
 -- mapping patterns to query views
 local routes = {
-    ['max']               = api.bla, --api.max,
-    ['record/([a-z_]+)/([a-z]+)']= api.record, --api.record,
-    ['year/([0-9]{4})']   = api.bla, --api.year,
+    ['record/([a-z_]+)/([a-z]+)']= api.record,
     ['now']               = api.now,
-    ['day']               = api.bla, --api.day,
-    ['recent']            = api.recent, --api.recent,
-    ['station']           = api.bla, --api.meta,
-    ['windhist']          = api.bla, --api.windhist,
-    ['hour']              = api.hour, --api.by_dateunit,
-    ['(month)']           = api.bla, --api.by_dateunit,
+    ['day']               = api.day,
+    ['recent']            = api.recent,
+    ['windhist']          = api.windhist,
+    ['hour']              = api.by_dateunit,
+    ['(month)']           = api.by_dateunit,
 }
 -- Set the content type
 ngx.header.content_type = 'application/json';
