@@ -16,6 +16,11 @@ if not conf then
     conf = cjson.decode(c)
 end
 
+-- Translate front end column names to back end column names
+local function column(key)
+    return conf.db.columns[key]
+end
+
 local function dbreq(sql)
     local db = mysql:new()
     db:set_timeout(30000)
@@ -111,13 +116,13 @@ function by_dateunit(match)
     local sql = dbreq([[
     SELECT
         ]]..datetrunc(unit)..[[ AS datetime,
-        AVG(temp) as outtemp,
-        MIN(temp) as tempmin,
-        MAX(temp) as tempmax,
-        AVG(dewpt) as dewpoint,
-        AVG(windspeed) as windspeed,
-        AVG(winddir) as winddir,
-        AVG(humidity) as outhumidity
+        AVG(]]..column('outtemp')..[[) as outtemp,
+        MIN(]]..column('outtemp')..[[) as tempmin,
+        MAX(]]..column('outtemp')..[[) as tempmax,
+        AVG(]]..column('dewpoint')..[[) as dewpoint,
+        AVG(]]..column('windspeed')..[[) as windspeed,
+        AVG(]]..column('winddir')..[[) as winddir,
+        AVG(]]..column('humidity')..[[) as outhumidity
     FROM ]]..conf.db.table..[[ as a
     ]]..where..[[
     GROUP BY datetime
@@ -147,7 +152,15 @@ function recent()
 end
 
 function now()
-    return dbreq([[SELECT CONVERT_TZ(timestamp,'UTC','Europe/Amsterdam') AS datetime, windspeed, winddir, dewpt AS dewpoint, temp AS outtemp, humidity AS outhumidity FROM ]] .. conf.db.table .. [[ ORDER BY timestamp DESC LIMIT 1;]])
+    return dbreq([[
+    SELECT 
+        CONVERT_TZ(timestamp,'UTC','Europe/Amsterdam') AS datetime,
+        ]]..column('windspeed')..[[ AS windspeed,
+        ]]..column('winddir')..[[ AS winddir,
+        ]]..column('dewpoint')..[[ AS dewpoint,
+        ]]..column('outtemp')..[[ AS outtemp,
+        ]]..column('humidity')..[[ AS outhumidity
+     FROM ]] .. conf.db.table .. [[ ORDER BY timestamp DESC LIMIT 1;]])
 end
 
 function day(match)
@@ -155,11 +168,11 @@ function day(match)
     local sql = dbreq([[
     SELECT
         ]]..datetrunc('minute')..[[ AS datetime,
-        AVG(temp) as outtemp,
-        AVG(dewpt) as dewpoint,
-        MIN(windspeed) as windspeed,
-        AVG(winddir) as winddir,
-        AVG(humidity) as outhumidity
+        AVG(]]..column('outtemp')..[[) as outtemp,
+        AVG(]]..column('dewpoint')..[[) as dewpoint,
+        MIN(]]..column('windspeed')..[[) as windspeed,
+        AVG(]]..column('winddir')..[[) as winddir,
+        AVG(]]..column('humidity')..[[) as outhumidity
     FROM ]]..conf.db.table..[[
     ]]..where..[[
     GROUP BY datetime
@@ -171,17 +184,14 @@ end
 function windhist(match)
     local where, andwhere = getDateConstrains(ngx.req.get_uri_args()['start'])
     return dbreq([[
-        SELECT FLOOR(COUNT(*)) AS count, (ROUND(winddir/10,0)*10) AS d, AVG(windspeed)*1.94384449 AS avg
+        SELECT FLOOR(COUNT(*)) AS count,
+        CASE WHEN ]]..column('windspeed')..[[<2.0 THEN NULL ELSE (ROUND(]]..column('winddir')..[[/10,0)*10) END as d, 
+        AVG(]]..column('windspeed')..[[)*1.94384449 AS avg
         FROM ]]..conf.db.table..[[
         ]]..where..[[
         GROUP BY d
         ORDER BY d
     ]])
-end
-
--- Translate front end column names to back end column names
-local function column(key)
-    return conf.db.columns[key]
 end
 
 -- Function to return extremeties from database, min/maxes for different time intervals
